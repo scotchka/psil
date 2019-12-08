@@ -80,3 +80,11 @@ def test_cdr_list():
 def test_interpreter_error():
     with pytest.raises(InterpreterError):
         assert interpret([1, 2, 3], {}, {})
+
+
+def test_atom():
+    assert interpret([1, "atom?"], {}, {}) is True
+
+
+def test_not_atom():
+    assert interpret([[[1, 2, 3], "quote"], "atom?"], {}, {}) is False

@@ -54,6 +54,10 @@ def interpret(expr, locals, globals):
         rhs = interpret(expr[1], locals, globals)
         return lhs == rhs
 
+    if op == "atom?":
+        operand = interpret(expr[0], locals, globals)
+        return not isinstance(operand, list)
+
     if op == "quote":
         return expr[0]
 
