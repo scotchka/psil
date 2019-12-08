@@ -60,7 +60,7 @@ def interpret(expr, locals, globals):
         obj = locals[op] if op in locals else globals[op]
 
         if isinstance(obj, Function):
-            args = expr[:-1]
+            args = [interpret(term, locals, globals) for term in expr[:-1]]
             return obj(args)
 
 

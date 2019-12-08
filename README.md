@@ -25,8 +25,8 @@ In the top level directory and with the virtualenv active:
 Sample usage:
 
 ```
-$ python psil.py sample.psil
-25
+$ python psil.py factorial.psil
+120
 ```
 
 ## Running the tests
