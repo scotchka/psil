@@ -53,6 +53,26 @@ def interpret(expr, locals, globals):
     if op == "quote":
         return expr[0]
 
+    if op == "cons":
+        head = interpret(expr[0], locals, globals)
+        tail = interpret(expr[1], locals, globals)
+
+        if isinstance(tail, list):
+            return [head] + tail
+        else:
+            return head, tail
+
+    if op == "car":
+        pair = interpret(expr[0], locals, globals)
+        return pair[0]
+
+    if op == "cdr":
+        pair = interpret(expr[0], locals, globals)
+        if isinstance(pair, list):
+            return pair[1:]
+        else:
+            return pair[1]
+
     if op == "cond":
         clauses = expr[:-1]
         for condition, value in clauses:

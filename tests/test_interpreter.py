@@ -48,3 +48,29 @@ def test_cond():
 
 def test_quote():
     assert interpret([["a", "b", "c"], "quote"], {}, {}) == ["a", "b", "c"]
+
+
+def test_cons():
+    assert interpret([3, 4, "cons"], {}, {}) == (3, 4)
+
+
+def test_cons_list():
+    assert interpret([1, [[2, 3], "quote"], "cons"], {}, {}) == [1, 2, 3]
+
+
+def test_car():
+    pair = interpret([3, 4, "cons"], {}, {})
+    assert interpret([pair, "car"], {}, {}) == 3
+
+
+def test_car_list():
+    assert interpret([[[1, 2, 3], "quote"], "car"], {}, {}) == 1
+
+
+def test_cdr():
+    pair = interpret([3, 4, "cons"], {}, {})
+    assert interpret([pair, "cdr"], {}, {}) == 4
+
+
+def test_cdr_list():
+    assert interpret([[[1, 2, 3], "quote"], "cdr"], {}, {}) == [2, 3]
