@@ -24,3 +24,8 @@ def test_lambda():
     """
     block = parse(tokenize(source))
     assert run_block(block) == 25
+
+
+def test_equality():
+    assert interpret([2, 2, "eq?"], {}, {}) is True
+    assert interpret([2, 1, "eq?"], {}, {}) is False

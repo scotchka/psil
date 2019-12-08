@@ -29,16 +29,9 @@ def interpret(expr, locals, globals):
         return expr
 
     op = expr[-1]
+
     if op in MATH_OPS:
-        # operands = [
-        #     namespace[term] if isinstance(term, str) else term for term in expr[:-1]
-        # ]
-        operands = []
-        for term in expr[:-1]:
-            if isinstance(term, str):
-                operands.append(locals[term] if term in locals else globals[term])
-            else:
-                operands.append(term)
+        operands = [interpret(term, locals, globals) for term in expr[:-1]]
         return reduce(MATH_OPS[op], operands)
 
     if op == "define":
@@ -51,6 +44,11 @@ def interpret(expr, locals, globals):
         params = expr[0]
         body = expr[1]
         return Function(params, body)
+
+    if op == "eq?":
+        lhs = interpret(expr[0], locals, globals)
+        rhs = interpret(expr[1], locals, globals)
+        return lhs == rhs
 
     if isinstance(op, str):
         obj = locals[op] if op in locals else globals[op]
