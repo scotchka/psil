@@ -24,6 +24,29 @@ In the top level directory and with the virtualenv active:
 
 Sample usage:
 
+``factorial.psil`` is a source file with content:
+
+```
+(
+    factorial
+    (
+        (x)
+        (
+            ((x 1 eq?) 1)
+            (else (x ((x 1 -)  factorial) *))
+            cond
+        )
+        lambda
+    )
+    define
+)
+
+
+(5 factorial)
+```
+
+Running this produces:
+
 ```
 $ python psil.py factorial.psil
 120
