@@ -11,6 +11,10 @@ MATH_OPS = {
 namespace = {}
 
 
+class InterpreterError(Exception):
+    pass
+
+
 class Function:
     def __init__(self, params, body):
         self.params = params
@@ -85,6 +89,8 @@ def interpret(expr, locals, globals):
         if isinstance(obj, Function):
             args = [interpret(term, locals, globals) for term in expr[:-1]]
             return obj(args)
+
+    raise InterpreterError("unknown operation")
 
 
 def run_block(block):

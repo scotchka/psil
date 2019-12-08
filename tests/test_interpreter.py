@@ -1,4 +1,5 @@
-from src.interpreter import interpret, run_block
+import pytest
+from src.interpreter import interpret, run_block, InterpreterError
 from src.parser import tokenize, parse
 
 
@@ -74,3 +75,8 @@ def test_cdr():
 
 def test_cdr_list():
     assert interpret([[[1, 2, 3], "quote"], "cdr"], {}, {}) == [2, 3]
+
+
+def test_interpreter_error():
+    with pytest.raises(InterpreterError):
+        assert interpret([1, 2, 3], {}, {})
