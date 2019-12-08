@@ -50,6 +50,9 @@ def interpret(expr, locals, globals):
         rhs = interpret(expr[1], locals, globals)
         return lhs == rhs
 
+    if op == "quote":
+        return expr[0]
+
     if op == "cond":
         clauses = expr[:-1]
         for condition, value in clauses:

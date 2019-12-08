@@ -35,12 +35,16 @@ def test_cond():
     source = """
     (a 3 define)
     (
-        ((a 1 eq?) -1)
-        ((a 2 eq?) -2)
-        ((a 3 eq?) -3)
-        (else 0)
+        ((a 1 eq?) (a quote))
+        ((a 2 eq?) (b quote))
+        ((a 3 eq?) (c quote))
+        (else (no-idea quote))
     cond
     )
     """
     block = parse(tokenize(source))
-    assert run_block(block) == -3
+    assert run_block(block) == "c"
+
+
+def test_quote():
+    assert interpret([["a", "b", "c"], "quote"], {}, {}) == ["a", "b", "c"]
