@@ -29,3 +29,18 @@ def test_lambda():
 def test_equality():
     assert interpret([2, 2, "eq?"], {}, {}) is True
     assert interpret([2, 1, "eq?"], {}, {}) is False
+
+
+def test_cond():
+    source = """
+    (a 3 define)
+    (
+        ((a 1 eq?) -1)
+        ((a 2 eq?) -2)
+        ((a 3 eq?) -3)
+        (else 0)
+    cond
+    )
+    """
+    block = parse(tokenize(source))
+    assert run_block(block) == -3

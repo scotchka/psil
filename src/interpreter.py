@@ -50,6 +50,12 @@ def interpret(expr, locals, globals):
         rhs = interpret(expr[1], locals, globals)
         return lhs == rhs
 
+    if op == "cond":
+        clauses = expr[:-1]
+        for condition, value in clauses:
+            if condition == "else" or interpret(condition, locals, globals) is True:
+                return interpret(value, locals, globals)
+
     if isinstance(op, str):
         obj = locals[op] if op in locals else globals[op]
 
