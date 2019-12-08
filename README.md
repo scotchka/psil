@@ -24,7 +24,7 @@ In the top level directory and with the virtualenv active:
 
 Sample usage:
 
-``factorial.psil`` is a source file with content:
+**factorial.psil** is a source file with content:
 
 ```
 (
