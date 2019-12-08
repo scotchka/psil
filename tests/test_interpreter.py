@@ -1,5 +1,26 @@
-from src.interpreter import interpret
+from src.interpreter import interpret, run_block
+from src.parser import tokenize, parse
 
 
 def test_arithmetic():
-    assert interpret([1, 2, "/"]) == 0.5
+    assert interpret([1, 2, "/"], {}, {}) == 0.5
+
+
+def test_define():
+    namespace = {}
+    interpret(["x", 42, "define"], namespace, namespace)
+    assert namespace == {"x": 42}
+
+
+def test_run_block():
+    block = [["x", 42, "define"], "x"]
+    assert run_block(block) == 42
+
+
+def test_lambda():
+    source = """
+    (square ((x) (x x *) lambda) define)
+    (5 square)
+    """
+    block = parse(tokenize(source))
+    assert run_block(block) == 25
