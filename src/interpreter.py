@@ -42,7 +42,7 @@ def interpret(expr, locals, globals):
 
     op = expr[-1]  # postfix!
 
-    if op in MATH_OPS:  # op is +, -, *, or /
+    if isinstance(op, str) and op in MATH_OPS:  # op is +, -, *, or /
         operands = [interpret(term, locals, globals) for term in expr[:-1]]
         return reduce(MATH_OPS[op], operands)
 
@@ -103,6 +103,12 @@ def interpret(expr, locals, globals):
 
         args = [interpret(term, locals, globals) for term in expr[:-1]]
         return obj(args)
+
+    # allow calling of lambda expression inline
+    op = interpret(op, locals, globals)
+    if isinstance(op, Function):
+        args = [interpret(term, locals, globals) for term in expr[:-1]]
+        return op(args)
 
     raise InterpreterError("unknown operation")
 

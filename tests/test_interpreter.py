@@ -96,3 +96,13 @@ def test_atom():
 
 def test_not_atom():
     assert interpret([[[1, 2, 3], "quote"], "atom?"], {}, {}) is False
+
+
+def test_inline():
+    source = """
+    (   -2
+        ((x) (1 x +) lambda)
+    )
+    """
+    block = parse(tokenize(source))
+    assert run_block(block) == -1
