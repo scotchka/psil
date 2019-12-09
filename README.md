@@ -67,8 +67,8 @@ Sample output:
 ```
 Name                 Stmts   Miss  Cover
 ----------------------------------------
-src/interpreter.py      42      0   100%
-src/parser.py           45      0   100%
+src/interpreter.py      72      0   100%
+src/parser.py           60      0   100%
 ----------------------------------------
-TOTAL                   87      0   100%
+TOTAL                  132      0   100%
 ```
