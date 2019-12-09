@@ -16,7 +16,7 @@ This codebase was developed and tested with Python 3.7 on a MacBook Air running 
 
    `pip install -r requirements.txt`
 
-## Running locally
+## Running on the command line
 
 In the top level directory and with the virtualenv active:
 
