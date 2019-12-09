@@ -8,41 +8,51 @@ MATH_OPS = {
     "/": operator.truediv,
 }
 
-namespace = {}
+namespace = {}  # global namespace
 
 
 class InterpreterError(Exception):
+    """Runtime error."""
+
     pass
 
 
 class Function:
+    """Mock up function object"""
+
     def __init__(self, params, body):
+        """Function declared with parameters and code (body)"""
         self.params = params
         self.body = body
 
     def __call__(self, args):
+        """Calling function adds arguments to local namespace
+        and then interprets body."""
         self.namespace = dict(zip(self.params, args))
         return interpret(self.body, locals=self.namespace, globals=namespace)
 
 
 def interpret(expr, locals, globals):
-    if not isinstance(expr, list):
-        if isinstance(expr, str):
+    """Evaluates the expression tree."""
+    if not isinstance(expr, list):  # expr is leaf
+        if isinstance(expr, str):  # expr is a name: look up in locals then globals
             return locals[expr] if expr in locals else globals[expr]
-        return expr
 
-    op = expr[-1]
-    if op in MATH_OPS:
+        return expr  # expr is a number
+
+    op = expr[-1]  # postfix!
+
+    if op in MATH_OPS:  # op is +, -, *, or /
         operands = [interpret(term, locals, globals) for term in expr[:-1]]
         return reduce(MATH_OPS[op], operands)
 
-    if op == "define":
-        symbol = expr[0]
+    if op == "define":  # assign name and value to local namespace
+        name = expr[0]
         value = interpret(expr[1], locals, globals)
-        locals[symbol] = value
+        locals[name] = value
         return
 
-    if op == "lambda":
+    if op == "lambda":  # create function object
         params = expr[0]
         body = expr[1]
         return Function(params, body)
@@ -57,12 +67,13 @@ def interpret(expr, locals, globals):
         return not isinstance(operand, list)
 
     if op == "quote":
-        return expr[0]
+        return expr[0]  # do not evaluate
 
     if op == "cons":
         head = interpret(expr[0], locals, globals)
         tail = interpret(expr[1], locals, globals)
 
+        # we are not using linked list, so handle atom and list separately
         if isinstance(tail, list):
             return [head] + tail
         else:
@@ -74,6 +85,8 @@ def interpret(expr, locals, globals):
 
     if op == "cdr":
         pair = interpret(expr[0], locals, globals)
+
+        # we are not using linked list, so handle atom and list separately
         if isinstance(pair, list):
             return pair[1:]
         else:
@@ -88,15 +101,14 @@ def interpret(expr, locals, globals):
     if isinstance(op, str):
         obj = locals[op] if op in locals else globals[op]
 
-        if isinstance(obj, Function):
-            args = [interpret(term, locals, globals) for term in expr[:-1]]
-            return obj(args)
+        args = [interpret(term, locals, globals) for term in expr[:-1]]
+        return obj(args)
 
     raise InterpreterError("unknown operation")
 
 
 def run_block(block):
+    """Evaluate block of expressions and return last value."""
     for expr in block:
         result = interpret(expr, locals=namespace, globals=namespace)
-    # print(namespace)
     return result

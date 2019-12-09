@@ -3,6 +3,7 @@ class ParseError(Exception):
 
 
 def convert_if_number(token):
+    """Return number if token represents number, otherwise token itself."""
     try:
         token = int(token)
     except ValueError:
@@ -15,6 +16,7 @@ def convert_if_number(token):
 
 
 def tokenize(string):
+    """Produces list of tokens from source."""
     tokens = []
     token = ""
 
@@ -41,6 +43,7 @@ def tokenize(string):
 
 
 def expand_quote(ast):
+    """Syntactic sugar for single quotation mark."""
     i = 0
     while i < len(ast):
         if isinstance(ast[i], list):
@@ -56,6 +59,7 @@ def expand_quote(ast):
 
 
 def parse(tokens):
+    """Produces syntax tree (nested list) from tokens."""
     ast = []
     stack = [ast]
     for token in tokens:
