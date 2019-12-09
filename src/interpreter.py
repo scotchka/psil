@@ -26,14 +26,12 @@ class Function:
 
 
 def interpret(expr, locals, globals):
-    # print(expr)
     if not isinstance(expr, list):
         if isinstance(expr, str):
             return locals[expr] if expr in locals else globals[expr]
         return expr
 
     op = expr[-1]
-
     if op in MATH_OPS:
         operands = [interpret(term, locals, globals) for term in expr[:-1]]
         return reduce(MATH_OPS[op], operands)

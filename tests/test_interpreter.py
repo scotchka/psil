@@ -51,6 +51,14 @@ def test_quote():
     assert interpret([["a", "b", "c"], "quote"], {}, {}) == ["a", "b", "c"]
 
 
+def test_single_quote():
+    source = """
+    (a b c)'
+    """
+    ast = parse(tokenize(source))
+    assert interpret(ast[0], {}, {}) == ["a", "b", "c"]
+
+
 def test_cons():
     assert interpret([3, 4, "cons"], {}, {}) == (3, 4)
 

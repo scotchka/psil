@@ -22,12 +22,12 @@ def tokenize(string):
     while i < len(string):
 
         char = string[i]
-        if char in ("(", ")") or char.isspace():
+        if char in ("(", ")", "'") or char.isspace():
             if token:
                 tokens.append(convert_if_number(token))
                 token = ""
 
-        if char in ("(", ")"):
+        if char in ("(", ")", "'"):
             tokens.append(char)
         elif char.strip() != "":
             token += char
@@ -38,6 +38,21 @@ def tokenize(string):
         tokens.append(convert_if_number(token))
 
     return tokens
+
+
+def expand_quote(ast):
+    i = 0
+    while i < len(ast):
+        if isinstance(ast[i], list):
+            expand_quote(ast[i])
+            i += 1
+        elif ast[i] == "'":
+            if i == 0:
+                raise IndexError
+            ast[i - 1 : i + 1] = [[ast[i - 1], "quote"]]
+
+        else:
+            i += 1
 
 
 def parse(tokens):
@@ -57,5 +72,10 @@ def parse(tokens):
 
     if len(stack) != 1:
         raise ParseError("unbalanced expression")
+
+    try:
+        expand_quote(ast)
+    except IndexError:
+        raise ParseError("misplaced quote")
 
     return ast

@@ -32,3 +32,12 @@ def test_parser_exception_left():
 def test_parser_exception_stack_empty():
     with pytest.raises(ParseError):
         parse([")", "x"])
+
+
+def test_replace_quote():
+    assert parse([["a", "b"], "'"]) == [[["a", "b"], "quote"]]
+
+
+def test_replace_quote_error():
+    with pytest.raises(ParseError):
+        parse(["'", "a"])
