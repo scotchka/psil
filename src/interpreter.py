@@ -41,7 +41,7 @@ class Function:
         """Calling function adds arguments to local namespace
         and then interprets body."""
         self.namespace = dict(zip(self.params, args))
-        return interpret(self.body, locals=self.namespace, globals=namespace)
+        return run_block(self.body, locals=self.namespace, globals=namespace)
 
 
 def interpret(expr, locals, globals):
@@ -66,7 +66,7 @@ def interpret(expr, locals, globals):
 
     if op == "lambda":  # create function object
         params = expr[0]
-        body = expr[1]
+        body = expr[1:-1]
         return Function(params, body)
 
     if op == "eq?":
@@ -134,11 +134,11 @@ def interpret(expr, locals, globals):
     raise InterpreterError("unknown operation")
 
 
-def run_block(block):
+def run_block(block, locals=namespace, globals=namespace):
     """Evaluate block of expressions and return last value."""
     start = datetime.now()
     for expr in block:
-        result = interpret(expr, locals=namespace, globals=namespace)
+        result = interpret(expr, locals=locals, globals=globals)
     print("time elapsed", datetime.now() - start)
     print("function calls", profiler.count)
     return result
