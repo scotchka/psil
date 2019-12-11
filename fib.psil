@@ -1,0 +1,17 @@
+(
+    fib
+    (
+        (n)
+        (
+            ((n 1 eq?) 1)
+            ((n 0 eq?) 1)
+            (else (((n 2 -)  fib) ((n 1 -)  fib) +))
+            cond
+        )
+        lambda
+    )
+    define
+)
+
+
+(25 fib)
