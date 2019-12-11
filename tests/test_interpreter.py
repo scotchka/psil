@@ -109,8 +109,25 @@ def test_inline():
 
 
 def test_fibonacci():
-    with open("fib.psil") as f:
-        source = f.read()
+    source = """
+    (
+    fib
+    (
+        (n)
+        (
+            ((n 1 eq?) 1)
+            ((n 0 eq?) 1)
+            (else (((n 2 -)  fib) ((n 1 -)  fib) +))
+            cond
+        )
+        lambda
+    )
+    define
+    )
+    
+    
+    (25 fib)
+    """
 
     block = parse(tokenize(source))
     assert run_block(block) == 121393
@@ -118,9 +135,35 @@ def test_fibonacci():
 
 def test_closure():
     source = """
-    (make-add ( (x) ( (y) (x y +) lambda)  lambda) define)
+    (z -5 define)
+
+    (make-add ( (x) ( (y) (x y z +) lambda)  lambda) define)
 
     (4 (12 make-add))
     """
     block = parse(tokenize(source))
-    assert run_block(block) == 16
+    assert run_block(block) == 11
+
+
+def test_factorial():
+    source = """
+    (
+    factorial
+    (
+        (x)
+        (
+            ((x 1 eq?) 1)
+            (else (x ((x 1 -)  factorial) *))
+            cond
+        )
+        lambda
+    )
+    define
+    )
+    
+    
+    (5 factorial)
+    """
+
+    block = parse(tokenize(source))
+    assert run_block(block) == 120

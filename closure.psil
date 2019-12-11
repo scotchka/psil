@@ -1,3 +1,5 @@
-(make-add ( (x) ( (y) (x y +) lambda)  lambda) define)
+(z -5 define)
+
+(make-add ( (x) ( (y) (x y z +) lambda)  lambda) define)
 
 (4 (12 make-add))
