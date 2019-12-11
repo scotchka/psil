@@ -4,12 +4,12 @@ from src.parser import tokenize, parse
 
 
 def test_arithmetic():
-    assert interpret([1, 2, "/"], {}, {}) == 0.5
+    assert interpret([1, 2, "/"], {}, {}, {}) == 0.5
 
 
 def test_define():
     namespace = {}
-    interpret(["x", 42, "define"], namespace, namespace)
+    interpret(["x", 42, "define"], namespace, namespace, None)
     assert namespace == {"x": 42}
 
 
@@ -28,8 +28,8 @@ def test_lambda():
 
 
 def test_equality():
-    assert interpret([2, 2, "eq?"], {}, {}) is True
-    assert interpret([2, 1, "eq?"], {}, {}) is False
+    assert interpret([2, 2, "eq?"], {}, {}, {}) is True
+    assert interpret([2, 1, "eq?"], {}, {}, {}) is False
 
 
 def test_cond():
@@ -48,7 +48,7 @@ def test_cond():
 
 
 def test_quote():
-    assert interpret([["a", "b", "c"], "quote"], {}, {}) == ["a", "b", "c"]
+    assert interpret([["a", "b", "c"], "quote"], {}, {}, {}) == ["a", "b", "c"]
 
 
 def test_single_quote():
@@ -56,46 +56,46 @@ def test_single_quote():
     (a b c)'
     """
     ast = parse(tokenize(source))
-    assert interpret(ast[0], {}, {}) == ["a", "b", "c"]
+    assert interpret(ast[0], {}, {}, {}) == ["a", "b", "c"]
 
 
 def test_cons():
-    assert interpret([3, 4, "cons"], {}, {}) == (3, 4)
+    assert interpret([3, 4, "cons"], {}, {}, {}) == (3, 4)
 
 
 def test_cons_list():
-    assert interpret([1, [[2, 3], "quote"], "cons"], {}, {}) == [1, 2, 3]
+    assert interpret([1, [[2, 3], "quote"], "cons"], {}, {}, {}) == [1, 2, 3]
 
 
 def test_car():
-    pair = interpret([3, 4, "cons"], {}, {})
-    assert interpret([pair, "car"], {}, {}) == 3
+    pair = interpret([3, 4, "cons"], {}, {}, {})
+    assert interpret([pair, "car"], {}, {}, {}) == 3
 
 
 def test_car_list():
-    assert interpret([[[1, 2, 3], "quote"], "car"], {}, {}) == 1
+    assert interpret([[[1, 2, 3], "quote"], "car"], {}, {}, {}) == 1
 
 
 def test_cdr():
-    pair = interpret([3, 4, "cons"], {}, {})
-    assert interpret([pair, "cdr"], {}, {}) == 4
+    pair = interpret([3, 4, "cons"], {}, {}, {})
+    assert interpret([pair, "cdr"], {}, {}, {}) == 4
 
 
 def test_cdr_list():
-    assert interpret([[[1, 2, 3], "quote"], "cdr"], {}, {}) == [2, 3]
+    assert interpret([[[1, 2, 3], "quote"], "cdr"], {}, {}, {}) == [2, 3]
 
 
 def test_interpreter_error():
     with pytest.raises(InterpreterError):
-        assert interpret([1, 2, 3], {}, {})
+        assert interpret([1, 2, 3], {}, {}, {})
 
 
 def test_atom():
-    assert interpret([1, "atom?"], {}, {}) is True
+    assert interpret([1, "atom?"], {}, {}, {}) is True
 
 
 def test_not_atom():
-    assert interpret([[[1, 2, 3], "quote"], "atom?"], {}, {}) is False
+    assert interpret([[[1, 2, 3], "quote"], "atom?"], {}, {}, {}) is False
 
 
 def test_inline():
