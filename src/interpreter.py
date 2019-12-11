@@ -159,5 +159,5 @@ def run_block(block, locals=namespace, globals=namespace, closure=None):
     for expr in block:
         result = interpret(expr, locals=locals, globals=globals, closure=closure)
     # print("time elapsed", datetime.now() - start)
-    print("function calls", profiler.count)
+    # print("function calls", profiler.count)
     return result
