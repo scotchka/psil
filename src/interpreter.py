@@ -14,10 +14,19 @@ namespace = {}  # global namespace
 cache = {}  # memoize function calls
 
 
+class Profiler:
+    def __init__(self):
+        self.count = 0
+
+    def __call__(self):
+        self.count += 1
+
+
+profiler = Profiler()
+
+
 class InterpreterError(Exception):
     """Runtime error."""
-
-    pass
 
 
 class Function:
@@ -102,6 +111,7 @@ def interpret(expr, locals, globals):
                 return interpret(value, locals, globals)
 
     if isinstance(op, str):
+
         obj = locals[op] if op in locals else globals[op]
 
         args = [interpret(term, locals, globals) for term in expr[:-1]]
@@ -110,6 +120,7 @@ def interpret(expr, locals, globals):
         if key in cache:
             return cache[key]  # return cached value if found
 
+        profiler()
         result = obj(args)
         cache[key] = result  # stored in cache
         return result
@@ -129,4 +140,5 @@ def run_block(block):
     for expr in block:
         result = interpret(expr, locals=namespace, globals=namespace)
     print("time elapsed", datetime.now() - start)
+    print("function calls", profiler.count)
     return result
