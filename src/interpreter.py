@@ -1,5 +1,6 @@
 import operator
 from functools import reduce
+from datetime import datetime
 
 MATH_OPS = {
     "+": operator.add,
@@ -9,6 +10,8 @@ MATH_OPS = {
 }
 
 namespace = {}  # global namespace
+
+cache = {}  # memoize function calls
 
 
 class InterpreterError(Exception):
@@ -102,7 +105,14 @@ def interpret(expr, locals, globals):
         obj = locals[op] if op in locals else globals[op]
 
         args = [interpret(term, locals, globals) for term in expr[:-1]]
-        return obj(args)
+
+        key = (obj, tuple(args))
+        if key in cache:
+            return cache[key]  # return cached value if found
+
+        result = obj(args)
+        cache[key] = result  # stored in cache
+        return result
 
     # allow calling of lambda expression inline
     op = interpret(op, locals, globals)
@@ -115,6 +125,8 @@ def interpret(expr, locals, globals):
 
 def run_block(block):
     """Evaluate block of expressions and return last value."""
+    start = datetime.now()
     for expr in block:
         result = interpret(expr, locals=namespace, globals=namespace)
+    print("time elapsed", datetime.now() - start)
     return result

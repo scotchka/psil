@@ -106,3 +106,11 @@ def test_inline():
     """
     block = parse(tokenize(source))
     assert run_block(block) == -1
+
+
+def test_fibonacci():
+    with open("fib.psil") as f:
+        source = f.read()
+
+    block = parse(tokenize(source))
+    assert run_block(block) == 121393
