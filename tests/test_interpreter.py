@@ -114,3 +114,13 @@ def test_fibonacci():
 
     block = parse(tokenize(source))
     assert run_block(block) == 121393
+
+
+def test_closure():
+    source = """
+    (make-add ( (x) ( (y) (x y +) lambda)  lambda) define)
+
+    (4 (12 make-add))
+    """
+    block = parse(tokenize(source))
+    assert run_block(block) == 16
