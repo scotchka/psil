@@ -11,8 +11,6 @@ MATH_OPS = {
 
 namespace = {}  # global namespace
 
-cache = {}  # memoize function calls
-
 
 class Profiler:
     def __init__(self):
@@ -37,20 +35,26 @@ class Function:
         self.params = params
         self.body = body
         self.closure = closure or {}
+        self.cache = {}
 
     def __call__(self, args):
         """Calling function adds arguments to local namespace
         and then interprets body."""
+        args = tuple(args)
+        if args in self.cache:
+            return self.cache[args]
         self.namespace = dict(zip(self.params, args))
-        return run_block(
+        result = run_block(
             self.body, locals=self.namespace, globals=namespace, closure=self.closure
         )
+        self.cache[args] = result
+        return result
 
 
 def interpret(expr, locals, globals, closure):
     """Evaluates the expression tree."""
     closure = closure or {}
-
+    profiler()
     if not isinstance(expr, list):  # expr is leaf
         if isinstance(expr, str):  # expr is a name: look up in locals then globals
 
@@ -132,13 +136,7 @@ def interpret(expr, locals, globals, closure):
 
         args = [interpret(term, locals, globals, closure) for term in expr[:-1]]
 
-        key = (obj, tuple(args))
-        if key in cache:
-            return cache[key]  # return cached value if found
-
-        profiler()
         result = obj(args)
-        cache[key] = result  # stored in cache
         return result
 
     # allow calling of lambda expression inline
