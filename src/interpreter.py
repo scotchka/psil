@@ -1,6 +1,5 @@
 import operator
 from functools import reduce
-from copy import deepcopy
 
 MATH_OPS = {
     "+": operator.add,
@@ -83,7 +82,7 @@ def interpret(expr, locals, globals, closure):
     if op == "lambda":  # create function object
         params = expr[0]
         body = expr[1:-1]
-        func = Function(params, body, closure=deepcopy(locals))
+        func = Function(params, body, closure=locals)
         return func
 
     if op == "eq?":
