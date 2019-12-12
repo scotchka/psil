@@ -1,6 +1,5 @@
 import operator
 from functools import reduce
-from datetime import datetime
 from copy import deepcopy
 
 MATH_OPS = {
@@ -60,7 +59,7 @@ def interpret(expr, locals, globals, closure):
 
             if expr in closure:
                 return closure[expr]
-            # print(expr, locals, closure, globals)
+
             return globals[expr]
 
         return expr  # expr is a number
@@ -80,9 +79,7 @@ def interpret(expr, locals, globals, closure):
     if op == "lambda":  # create function object
         params = expr[0]
         body = expr[1:-1]
-        # print('make function, locals =', locals)
         func = Function(params, body, closure=deepcopy(locals))
-        # print(func.closure)
         return func
 
     if op == "eq?":
@@ -155,9 +152,7 @@ def interpret(expr, locals, globals, closure):
 
 def run_block(block, locals=namespace, globals=namespace, closure=None):
     """Evaluate block of expressions and return last value."""
-    # start = datetime.now()
     for expr in block:
         result = interpret(expr, locals=locals, globals=globals, closure=closure)
-    # print("time elapsed", datetime.now() - start)
-    # print("function calls", profiler.count)
+
     return result
